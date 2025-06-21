@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>判定フォーム</title>
+</head>
+<body>
+    <h1>判定フォーム</h1>
+    {% for uid, data in users.items() %}
+        <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
+            <p><strong>名前:</strong> {{ data.name }}</p>
+            <p><strong>ステージ:</strong> 第{{ data.stage }}問</p>
+            <img src="{{ url_for('static', filename='images/' + data.img) }}" width="200"><br><br>
+            <form action="/judge" method="post">
+                <input type="hidden" name="user_id" value="{{ uid }}">
+                <button name="result" value="correct">正解！</button>
+                <button name="result" value="wrong">不正解</button>
+            </form>
+        </div>
+    {% else %}
+        <p>判定待ちの画像はありません。</p>
+    {% endfor %}
+</body>
+</html>
