@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <title>判定フォーム</title>
 </head>
 <body>
     <h1>判定フォーム</h1>
-    {% for uid, data in users.items() %}
-        <div style="border: 1px solid black; padding: 10px; margin-bottom: 10px;">
-            <p><strong>名前:</strong> {{ data.name }}</p>
-            <p><strong>ステージ:</strong> 第{{ data.stage }}問</p>
-            <img src="{{ url_for('static', filename='images/' + data.img) }}" width="200"><br><br>
-            <form action="/judge" method="post">
-                <input type="hidden" name="user_id" value="{{ uid }}">
-                <button name="result" value="correct">正解！</button>
-                <button name="result" value="wrong">不正解</button>
-            </form>
+    {% for user_id, data in users.items() %}
+        <div style="border:1px solid #000; margin:10px; padding:10px;">
+            <p><b>User:</b> {{ user_id }}</p>
+            <p><b>Stage:</b> {{ data.stage }}</p>
+
+            <h3>履歴</h3>
+            {% for h in data.history %}
+                <p>Stage {{h.stage}}</p>
+                <img src="/{{h.image}}" width="200">
+            {% endfor %}
+
+            <h3>最新画像</h3>
+            {% if data.pending_image %}
+                <img src="/{{data.pending_image}}" width="300"><br>
+                {% if data.stage == 5 %}
+                    <a href="/judge/{{user_id}}/correct1">正解1</a> |
+                    <a href="/judge/{{user_id}}/correct2">正解2</a> |
+                    <a href="/judge/{{user_id}}/wrong">不正解</a>
+                {% elif data.stage == 6 %}
+                    <a href="/judge/{{user_id}}/correct">正解</a> |
+                    <a href="/judge/{{user_id}}/wrong">不正解</a>
+                {% else %}
+                    <a href="/judge/{{user_id}}/correct">正解</a> |
+                    <a href="/judge/{{user_id}}/wrong">不正解</a>
+                {% endif %}
+            {% else %}
+                <p>まだ画像なし</p>
+            {% endif %}
         </div>
-    {% else %}
-        <p>判定待ちの画像はありません。</p>
     {% endfor %}
 </body>
 </html>
